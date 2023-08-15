@@ -1,0 +1,354 @@
+﻿--Tạo cơ sở dữ liệu
+create database CUAHANG
+use CUAHANG
+
+--Tạo bảng HANG
+create table HANG(
+MaMH char(5) not null primary key,
+TenMH nvarchar(30),
+MauSac nvarchar(15),
+KichThuoc char(5),
+SLTon int, 
+DonGia int
+)
+
+--Tạo bảng NHANVIEN
+create table NHANVIEN(
+MaNV char(5) not null primary key,
+TenNV nvarchar(50),
+GioiTinh bit, 
+NgaySinh date,
+Luong int, 
+DiaChiNV nvarchar(50),
+SdtNV char(15),
+)
+
+--Tạo bảng CHINHANH
+create table CHINHANH(
+MaCN char(5) not null primary key,
+DiaChi nvarchar(50),
+MaNQL char(5),
+NgayBDQL date,
+foreign key (MaNQL) references NHANVIEN(MaNV)
+)
+
+--Tạo bảng QUANLY
+create table QUANLY(
+MaNV char(5) not null primary key,
+MaCN char(5),
+foreign key (MaNV) references NHANVIEN(MaNV),
+foreign key (MaCN) references CHINHANH(MaCN),
+)
+
+
+--Tạo bảng KHACH
+create table KHACH(
+MaKH char(5) not null primary key,
+TenKH nvarchar(50),
+DiaChiKH nvarchar(50),
+SdtKH char(15),
+)
+
+--Tạo bảng HOADON
+create table HOADON(
+SoHD char(5) not null primary key,
+MaNV char(5),
+MaKH char(5),
+NgayHD date,
+foreign key (MaNV) references NHANVIEN(MaNV),
+foreign key (MaKH) references KHACH(MaKH)
+)
+
+--Tạo bảng CTIETHD
+create table CTIETHD(
+MaMH char(5) not null,
+SoHD char(5) not null,
+SoLuong int,
+primary key (MaMH, SoHD),
+foreign key (MaMH) references HANG(MaMH),
+foreign key (SoHD) references HOADON(SoHD)
+)
+
+-- Chèn thông tin vào các bảng
+insert into HANG values
+('MH001', N'Áo sơ mi ngắn tay', N'Trắng', 'M', 150, 240000),
+('MH002', N'Áo sơ mi ngắn tay', N'Đen', 'L', 80, 270000),
+('MH003', N'Áo sơ mi dài tay', N'Trắng', 'M', 150, 280000),
+('MH004', N'Quần baggy jeans', N'Xanh', 'XL', 50, 320000),
+('MH006', N'Quần baggy jeans', N'Xám', 'L', 100, 350000),
+('MH007', N'Chân váy xếp ly', N'Hồng', 'S', 200, 150000),
+('MH008', N'Chân váy chữ A xẻ tà', N'Nâu', 'M', 50, 180000),
+('MH009', N'Quần short nhung', N'Đen', 'M', 120, 100000),
+('MH010', N'Quần short nhung', N'Hồng', 'M', 110, 120000),
+('MH011', N'Quần short nhung', N'Trắng', 'L', 70, 125000),
+('MH012', N'Áo blazer trơn Hàn Quốc', N'Be', 'M', 210, 180000),
+('MH013', N'Áo blazer trơn Hàn Quốc', N'Đen', 'M', 180, 195000),
+('MH014', N'Áo blazer trơn Hàn Quốc', N'Trắng', 'M', 155, 190000),
+('MH015', N'Áo thun trơn', N'Tím', 'XXL', 300, 150000),
+('MH016', N'Áo sweater nỉ Donut', N'Tím', 'XL', 80, 300000),
+('MH017', N'Áo thun trơn', N'Vàng', 'XXXL', 160, 150000),
+('MH018', N'Áo thun trơn', N'Đỏ', 'XXL', 90, 150000),
+('MH019', N'Áo thun trơn', N'Xanh rêu', 'XL', 160, 150000),
+('MH020', N'Áo thun tay dài unisex', N'Hồng', 'XXL', 200, 195000),
+('MH021', N'Áo sơ mi cổ bèo', N'Be', 'M', 120, 230000),
+('MH022', N'Áo thun cổ bèo', N'Nâu', 'M', 150, 220000),
+('MH023', N'Áo khoác nỉ', N'Xanh dương', 'XXL', 300, 350000),
+('MH024', N'Áo khoác nỉ', N'Cam', 'XXL', 240, 320000)
+
+
+
+insert into NHANVIEN values
+('NV001', N'Nguyễn Minh Ngọc', 0, '1998/8/22', 5000000, N'Hoàn Kiếm', '0234589245'),
+('NV002', N'Trần Minh Đức', 1, '1999/4/2', 3900000, N'Hà Đông', '0145458924'),
+('NV003', N'Lưu Quang Vũ', 1, '2001/11/5', 5000000, N'Hà Đông', '0233356245'),
+('NV004', N'Vũ Thị Duyên', 0, '2002/1/12', 4200000, N'Long Biên', '0234583309'),
+('NV005', N'Lê Thu Ngọc', 0, '1998/8/2', 6000000, N'Cầu Giấy', '0111589245'),
+('NV006', N'Nguyễn Minh Hiếu', 1, '2002/8/18', 3200000, N'Hoàn Kiếm', '0552689245')
+
+
+insert into CHINHANH values
+('CN01', N'Hoàn Kiếm', 'NV001', '2019/10/21'),
+('CN02', N'Hà Đông', 'NV003', '2021/1/1'),
+('CN03', N'Ba Đình', 'NV005', '2020/3/15')
+
+
+insert into QUANLY values 
+('NV001', 'CN01'), ('NV002', 'CN02'), ('NV003', 'CN02'), 
+('NV004', 'CN03'), ('NV005', 'CN03'), ('NV006', 'CN01')
+
+insert into KHACH values
+('K0001', N'Nguyễn Quỳnh Hoa', N'Thạch Thất', '0334555937'),
+('K0002', N'Tạ Thanh Hải', N'Hà Đông', '0331115937'),
+('K0003', N'Nguyễn Quỳnh Anh', N'Cầu Giấy', '0334555937'),
+('K0004', N'Vương Bích Duyên', N'Đống Đa', '0332455933'),
+('K0005', N'Nguyễn Kim Tân', N'Ba Đình', '0356789937'),
+('K0006', N'Nguyễn Quang Mạnh', N'Cầu Giấy', '0334555937'),
+('K0007', N'Vũ Tùng Dương', N'Thường Tín', '0334555937'),
+('K0008', N'Phan Đức Hải', N'Hoàn Kiếm', '0334555937'),
+('K0009', N'Phạm Linh Chi', N'Hai Bà Trưng', '0334555937'),
+('K0010', N'Nguyễn Thanh Loan', N'Hai Bà Trưng', '0334555937'),
+('K0011', N'Phan Minh Nhật', N'Hoàn Kiếm', '0334555937')
+
+
+insert into HOADON values
+('HD001', 'NV001', 'K0001', '2020/1/1'),
+('HD002', 'NV003', 'K0003', '2020/2/16'),
+('HD003', 'NV005', 'K0002', '2020/3/11'),
+('HD004', 'NV001', 'K0001', '2020/4/21'),
+('HD005', 'NV002', 'K0010', '2020/5/20'),
+('HD006', 'NV001', 'K0008', '2020/6/1'),
+('HD007', 'NV005', 'K0001', '2020/7/1'),
+('HD008', 'NV003', 'K0002', '2020/8/1'),
+('HD009', 'NV006', 'K0001', '2020/9/1'),
+('HD010', 'NV006', 'K0007', '2020/10/1'),
+('HD011', 'NV001', 'K0006', '2021/1/21'),
+('HD012', 'NV001', 'K0002', '2021/2/11'),
+('HD013', 'NV003', 'K0007', '2021/3/5'),
+('HD014', 'NV005', 'K0011', '2021/4/1')
+
+insert into CTIETHD values 
+('MH001', 'HD001', 1),
+('MH024', 'HD002', 10),
+('MH013', 'HD003', 2),
+('MH002', 'HD004', 3),
+('MH006', 'HD005', 5),
+('MH020', 'HD006', 7),
+('MH024', 'HD007', 8),
+('MH024', 'HD008', 2),
+('MH024', 'HD009', 3),
+('MH001', 'HD010', 1),
+('MH011', 'HD011', 1),
+('MH021', 'HD012', 5),
+('MH008', 'HD013', 7),
+('MH010', 'HD014', 1)
+
+select MaMH, TenMH
+from HANG
+except
+select HANG.MaMH, HANG.TenMH
+from NHANVIEN, HOADON, HANG , CTIETHD
+where NHANVIEN.MaNV = HOADON.MaNV and HOADON.SoHD = CTIETHD.SoHD and CTIETHD.MaMH = HANG.MaMH and TenNV like N'%Ngọc' 
+
+--Thêm một cột TongTien vào bảng CTIETHD 
+alter table CTIETHD
+	add TongTien int
+
+-- Cập nhật TongTien = DonGia * SoLuong
+update CTIETHD
+	set TongTien = (select (HANG.DonGia*CTIETHD.SoLuong)
+					from HANG
+					where HANG.MaMH = CTIETHD.MaMH)
+
+--1. Đưa ra danh sách nhân viên theo từng chi nhánh
+select QUANLY.MaCN, NHANVIEN.TenNV 
+from NHANVIEN, QUANLY
+where NHANVIEN.MaNV = QUANLY.MaNV
+group by QUANLY.MaCN, NHANVIEN.TenNV 
+
+--2. Đưa ra thông tin những nhân viên có địa chỉ tại 'Hà Đông'
+select * from NHANVIEN
+where DiaChiNV = N'Hà Đông'
+
+--3. Đưa ra tên, địa chỉ của nhân viên có giới tính Nữ
+select TenNV, DiaChiNV from NHANVIEN
+where GioiTinh = '0'
+
+--4. Đưa ra mã nhân viên, tên của những nhân viên làm việc tại chi nhánh có địa chỉ 'Hoàn Kiếm'
+select NHANVIEN.MaNV, NHANVIEN.TenNV 
+from NHANVIEN, CHINHANH, QUANLY
+where (NHANVIEN.MaNV = QUANLY.MaNV) and (CHINHANH.MaCN = QUANLY.MaCN)
+		and CHINHANH.DiaChi = N'Hoàn Kiếm'
+
+--5. Đưa ra tên, ngày bắt đầu quản lý của người quản lý các chi nhánh
+select NHANVIEN.TenNV, CHINHANH.NgayBDQL 
+from NHANVIEN, CHINHANH
+where NHANVIEN.MaNV = CHINHANH.MaNQL
+
+--6. Đếm số nhân viên của từng chi nhánh
+select MaCN, count(MaNV) as SoNV
+from QUANLY
+group by MaCN
+
+--7. Đếm số nhân viên có lương lớn hơn 4500000 của từng chi nhánh
+select QUANLY.MaCN, count(QUANLY.MaNV) as SoNV
+from NHANVIEN, QUANLY
+where NHANVIEN.MaNV = QUANLY.MaNV
+	and NHANVIEN.Luong > 4500000
+group by QUANLY.MaCN
+
+--8. Đưa ra lương trung bình của nhân viên theo từng chi nhánh
+select QUANLY.MaCN, avg(NHANVIEN.Luong) as LuongTB 
+from NHANVIEN, QUANLY 
+where NHANVIEN.MaNV = QUANLY.MaNV
+group by QUANLY.MaCN
+
+--9. Đưa ra lương lớn nhất, lương nhỏ nhất, lương trung bình của tất cả nhân viên
+select max(Luong) as LuongLN, min(Luong) as LuongNN, avg(Luong) as LuongTB
+from NHANVIEN
+
+--10. Đưa ra họ tên nhân viên, lương sắp xếp theo thứ tự giảm dần của lương
+select TenNV, Luong
+from NHANVIEN
+order by Luong desc 
+
+--11.Đưa ra danh sách nhân viên có lương trong khoảng từ 3000000 đến 4500000
+select * 
+from NHANVIEN
+where Luong between 3000000 and 4500000
+
+--12. Đưa ra họ tên, chi nhánh làm việc của các nhân viên có họ bắt đầu bằng 'Nguyễn'
+select NHANVIEN.TenNV, CHINHANH.DiaChi
+from NHANVIEN, CHINHANH, QUANLY
+where NHANVIEN.MaNV = QUANLY.MaNV and CHINHANH.MaCN = QUANLY.MaCN
+	and NHANVIEN.TenNV like N'Nguyễn%'
+
+--13. Đưa ra chi nhánh, lương lớn nhất của các chi nhánh có lương lớn hơn 4500000
+select QUANLY.MaCN, max(NHANVIEN.Luong) as LuongLN
+from NHANVIEN, QUANLY 
+where NHANVIEN.MaNV = QUANLY.MaNV
+group by QUANLY.MaCN
+having max(NHANVIEN.Luong) > 4500000
+
+--14. Tìm những khách hàng có thời gian mua hàng từ ngày 20/1/2020 đến ngày 1/1/2021
+select KHACH.TenKH, HOADON.NgayHD 
+from KHACH, HOADON
+where KHACH.MaKH = HOADON.MaKH
+and (HOADON.NgayHD between '2020/1/20' and '2021/1/1')
+
+--15. Cho biết mã và tên các mặt hàng có giá nhỏ hơn 200000 và có kích thước XL
+select MaMH, TenMH
+from HANG
+where DonGia < 200000 and KichThuoc = 'XL'
+
+--16. Cho biết mã mặt hàng, tên, số lượng tồn và giá của các mặt hàng có màu Trắng, kích thước M
+select MaMH, TenMH, SLTon, DonGia
+from HANG
+where MauSac = N'Trắng' and KichThuoc = 'M'
+
+--17. Đưa ra mã khách hàng và tên khách hàng của những khách chưa mua hàng lần nào từ tháng 1/2021
+select MaKH, TenKH
+from KHACH
+except
+select KHACH.MaKH, KHACH.TenKH 
+from KHACH, HOADON
+where KHACH.MaKH = HOADON.MaKH and year(NgayHD) >= 2021
+
+--18. Đưa ra mã nhân viên, họ tên của những nhân viên chưa tạo hóa đơn nào
+select MaNV, TenNV
+from NHANVIEN
+except
+select NHANVIEN.MaNV, NHANVIEN.TenNV
+from NHANVIEN, HOADON where NHANVIEN.MaNV = HOADON.MaNV
+
+--19. Cho biết số lượng bán trung bình của mỗi mặt hàng
+select MaMH, avg(SoLuong)
+from CTIETHD
+group by MaMH
+
+--20. Đưa ra tên 10 khách mua hàng đầu tiên của cửa hàng và sản phẩm họ 
+select top(10) TenKH
+from KHACH, HOADON
+where KHACH.MaKH = HOADON.MaKH
+order by NgayHD asc 
+
+--21. Đưa ra 10 khách hàng mua hàng gần đây nhất của cửa hàng
+select top(10) TenKH
+from KHACH, HOADON
+where KHACH.MaKH = HOADON.MaKH
+order by NgayHD desc
+
+
+--22. Đưa ra tên những khách hàng có hóa đơn trên 1.000.000
+select KHACH.TenKH, CTIETHD.TongTien
+from KHACH, HOADON, CTIETHD
+where KHACH.MaKH = HOADON.MaKH and HOADON.SoHD = CTIETHD.SoHD
+		and CTIETHD.TongTien > 1000000
+
+--23.Đưa ra thông tin của nhân viên có lương lớn nhất
+select * from NHANVIEN
+where Luong = (select max(Luong) from NHANVIEN)
+
+--24.  Đưa ra tên, địa chỉ chi nhánh, lương của nhân viên có lương lớn hơn lương trung bình của toàn bộ nhân viên
+select NHANVIEN.TenNV, NHANVIEN.Luong, CHINHANH.DiaChi
+from NHANVIEN, CHINHANH, QUANLY
+where NHANVIEN.MaNV = QUANLY.MaNV and CHINHANH.MaCN = QUANLY.MaCN
+	and NHANVIEN.Luong > (select avg(NHANVIEN.Luong) from NHANVIEN)
+
+--25. Đưa ra thông tin những mặt hàng có số lượng tồn kho lớn nhất
+select * from HANG
+where SLTon  = (select max(SLTon) from HANG)
+
+--26. Đưa ra thông tin những mặt hàng chưa từng được bán
+select * from HANG
+where MaMH not in (select MaMH from CTIETHD)
+
+--27. Tìm tên, địa chỉ và số điện thoại khách hàng đã mua mặt hàng 'Áo thun trơn' hoặc 'Chân váy xếp ly' hoặc 'Áo sơ mi ngắn tay'
+select KHACH.TenKH, KHACH.DiaChiKH, KHACH.SdtKH
+from KHACH
+where KHACH.MaKH in (select MaKH 
+				from HANG, HOADON, CTIETHD 
+				where (HANG.MaMH = CTIETHD.MaMH and HOADON.SoHD = CTIETHD.SoHD)
+				and HANG.TenMH in (N'Áo thun trơn',N'Chân váy xếp ly',N'Áo sơ mi ngắn tay'))
+
+--28. Đưa ra danh sách mặt hàng có giá bán thấp nhất 
+select MaMH, TenMH, DonGia
+from HANG
+where DonGia = (select min(DonGia) from HANG)		
+
+--29. Đưa ra danh sách mặt hàng bán chạy nhất (số lượng bán trung bình lớn nhất)
+select HANG.MaMH, HANG.TenMH, avg(SoLuong) as SLTB
+from CTIETHD, HANG
+where HANG.MaMH = CTIETHD.MaMH
+group by HANG.MaMH, HANG.TenMH
+having avg(CTIETHD.SoLuong) >= all (select avg(CTIETHD.SoLuong) 
+							        from CTIETHD
+							        group by CTIETHD.MaMH)
+
+--30. Đưa ra hóa đơn có tổng tiền thanh toán lớn nhất trong năm 2020
+select *
+from HOADON, CTIETHD
+where HOADON.SoHD = CTIETHD.SoHD
+and CTIETHD.TongTien = (select max(TongTien) 
+						from CTIETHD, HOADON
+						where HOADON.SoHD = CTIETHD.SoHD
+						and year(NgayHD)=2020)
